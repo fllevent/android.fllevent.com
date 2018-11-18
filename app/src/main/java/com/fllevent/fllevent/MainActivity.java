@@ -5,8 +5,10 @@ package com.fllevent.fllevent;
         import android.support.v4.content.ContextCompat;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.util.Log;
         import android.widget.TextView;
-
         import com.android.volley.Cache;
         import com.android.volley.Network;
         import com.android.volley.Request;
@@ -16,18 +18,19 @@ package com.fllevent.fllevent;
         import com.android.volley.toolbox.BasicNetwork;
         import com.android.volley.toolbox.DiskBasedCache;
         import com.android.volley.toolbox.HurlStack;
+        import com.android.volley.toolbox.JsonArrayRequest;
         import com.android.volley.toolbox.JsonObjectRequest;
+        import com.android.volley.toolbox.JsonRequest;
         import com.android.volley.toolbox.StringRequest;
-
         import org.json.*;
 
-        import java.net.HttpURLConnection;
-        import java.net.URL;
+        import java.util.ArrayList;
+        import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    URL url;
-    HttpURLConnection urlConnection = null;
     TextView textView;
+    MyRecyclerViewAdapter adapter;
+    ArrayList<String> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,37 +39,46 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.INTERNET}, 1);
         }
         textView = findViewById(R.id.textView);
-        initRequestQueue();
-    }
-    public void initRequestQueue() {
-        RequestQueue mRequestQueue;
-    // Instantiate the cache
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-    // Set up the network to use HttpURLConnection as the HTTP client.
-        Network network = new BasicNetwork(new HurlStack());
-    // Instantiate the RequestQueue with the cache and network.
-        mRequestQueue = new RequestQueue(cache, network);
-    // Start the queue
-        mRequestQueue.start();
-        String url ="http://fllevent.com:4000/api/event/singleevent/testevent";
-    // Formulate the request and handle the response.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Do something with the response
-                        JSONObject JSONResponse = new JSONObject();
 
-                        textView.setText(response);
+        RequestQueue mRequestQueue;
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024 * 128); // 1MB cap
+        Network network = new BasicNetwork(new HurlStack());
+        mRequestQueue = new RequestQueue(cache, network);
+        mRequestQueue.start();
+        String url ="http://fllevent.com:4000/api/event/allevents";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        list = new ArrayList<String>();
+                        for(int i = 0; i < response.length();i++) {
+                            try {
+                                JSONObject object = response.getJSONObject(i);
+                                String eventName = object.getString("EventName");
+                                list.add(eventName);
+                                //textView.setText(list.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        initViewAdapter(list);
                     }
-                },
-                new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
+
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle error
                         textView.setText("Something went wrong");
                     }
                 });
-        mRequestQueue.add(stringRequest);
-        }
+        mRequestQueue.add(jsonArrayRequest);
     }
+
+    public void initViewAdapter(ArrayList<String> dataList) {
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MyRecyclerViewAdapter(this, dataList);
+        recyclerView.setAdapter(adapter);
+        textView.setText(list.toString());
+    }
+}
