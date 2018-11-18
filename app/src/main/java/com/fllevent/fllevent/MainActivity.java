@@ -1,14 +1,17 @@
 package com.fllevent.fllevent;
 
         import android.Manifest;
+        import android.content.Intent;
         import android.content.pm.PackageManager;
         import android.support.v4.content.ContextCompat;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
-        import android.util.Log;
+        import android.view.View;
         import android.widget.TextView;
+        import android.widget.Toast;
+
         import com.android.volley.Cache;
         import com.android.volley.Network;
         import com.android.volley.Request;
@@ -19,18 +22,16 @@ package com.fllevent.fllevent;
         import com.android.volley.toolbox.DiskBasedCache;
         import com.android.volley.toolbox.HurlStack;
         import com.android.volley.toolbox.JsonArrayRequest;
-        import com.android.volley.toolbox.JsonObjectRequest;
-        import com.android.volley.toolbox.JsonRequest;
-        import com.android.volley.toolbox.StringRequest;
         import org.json.*;
 
         import java.util.ArrayList;
-        import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
     TextView textView;
     MyRecyclerViewAdapter adapter;
     ArrayList<String> list;
+    public static final String EVENT_NAME = "com.fllevent.fllevent.NAME";
+    public static final String EXTRA_ID = "com.fllevent.fllevent.ID";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +79,18 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyRecyclerViewAdapter(this, dataList);
+        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         textView.setText(list.toString());
+    }
+
+
+    @Override
+    public void onItemClick(View view, int position) {
+        //Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, EventDisplay.class);
+        intent.putExtra(EXTRA_ID,position);
+        intent.putExtra(EVENT_NAME,adapter.getItem(position));
+        startActivity(intent);
     }
 }

@@ -6,13 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder> {
     private ArrayList<String> myDataset;
     private LayoutInflater mInflater;
+    private ItemClickListener mClickListener;
     public MyRecyclerViewAdapter(Context context, ArrayList<String> myDataset) {
         this.mInflater = LayoutInflater.from(context);
         this.myDataset = myDataset;
@@ -39,11 +38,31 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textView;
-        public MyViewHolder(View v) {
-            super(v);
-            textView = v.findViewById(R.id.textRow);
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            textView = itemView.findViewById(R.id.textRow);
         }
+
+        @Override
+        public void onClick(View view) {
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        }
+    }
+
+    String getItem(int id) {
+        return myDataset.get(id);
+    }
+
+    // allows clicks events to be caught
+    void setClickListener(ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+    // parent activity will implement this method to respond to click events
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }
