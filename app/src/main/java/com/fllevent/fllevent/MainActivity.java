@@ -9,6 +9,7 @@ package com.fllevent.fllevent;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
         import android.view.View;
+        import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.Toast;
 
@@ -30,8 +31,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     TextView textView;
     MyRecyclerViewAdapter adapter;
     ArrayList<String> list;
+    ArrayList<String> searchList;
     public static final String EVENT_NAME = "com.fllevent.fllevent.NAME";
     public static final String EXTRA_ID = "com.fllevent.fllevent.ID";
+    EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             requestPermissions(new String[]{Manifest.permission.INTERNET}, 1);
         }
         textView = findViewById(R.id.textView);
-
+        editText = findViewById(R.id.editText);
         RequestQueue mRequestQueue;
         Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024 * 128); // 1MB cap
         Network network = new BasicNetwork(new HurlStack());
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         adapter = new MyRecyclerViewAdapter(this, dataList);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        textView.setText(list.toString());
+        //textView.setText(list.toString());
     }
 
 
@@ -92,5 +95,21 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         intent.putExtra(EXTRA_ID,position);
         intent.putExtra(EVENT_NAME,adapter.getItem(position));
         startActivity(intent);
+    }
+
+    public void search(View view) {
+        String searchData = editText.getText().toString();
+        searchList = new ArrayList<String>();
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i).contains(searchData)) {
+                searchList.add(list.get(i));
+            }
+        }
+        if(!searchList.isEmpty()) {
+            initViewAdapter(searchList);
+        } else {
+            searchList.add("No results");
+            initViewAdapter(searchList);
+        }
     }
 }
