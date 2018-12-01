@@ -18,9 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EventDisplay"
-            android:parentActivityName=".MainActivity">
-        </activity>
+        <activity
+            android:name=".EventDisplay"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"></activity>
+        <activity android:name=".ScoreDisplay"
+            android:parentActivityName=".EventDisplay"
+            android:launchMode="singleTop"></activity>
     </application>
 
 </manifest>

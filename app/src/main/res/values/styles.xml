@@ -6,5 +6,7 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkSecondary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 </resources>
