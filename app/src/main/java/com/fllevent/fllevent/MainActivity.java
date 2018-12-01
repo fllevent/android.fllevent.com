@@ -124,5 +124,11 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             searchList.add("No results");
             initViewAdapter(searchList);
         }
+        if(searchList.size() == 1 && !searchList.get(0).equals("No results")) {
+            Intent intent = new Intent(this, EventDisplay.class);
+            intent.putExtra(EXTRA_ID,0);
+            intent.putExtra(EVENT_NAME,adapter.getItem(0));
+            startActivity(intent);
+        }
     }
 }
