@@ -31,9 +31,9 @@ public class ScoreDisplay extends AppCompatActivity {
     String teamName;
     int teamNum;
     String eventName;
-    String matchScore1 = "20";
-    String matchScore2 = "15";
-    String matchScore3 = "10";
+    String matchScore1 = "0";
+    String matchScore2 = "0";
+    String matchScore3 = "0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +67,12 @@ public class ScoreDisplay extends AppCompatActivity {
                                 TextView textView = findViewById(R.id.textView3);
                                 TextView textView2 = findViewById(R.id.textView4);
                                 TextView textView3 = findViewById(R.id.textView5);
-                                textView.setText(matchScore1);
-                                textView2.setText(matchScore2);
-                                textView3.setText(matchScore3);
+                                TextView textView4 = findViewById(R.id.textView6);
+                                textView.setText("Score from match 1: " + matchScore1);
+                                textView2.setText("Score from match 2: " + matchScore2);
+                                textView3.setText("Score from match 3: " + matchScore3);
+                                int totalScore = Integer.parseInt(matchScore1) + Integer.parseInt(matchScore2) + Integer.parseInt(matchScore3);
+                                textView4.setText("Total score: " + Integer.toString(totalScore));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

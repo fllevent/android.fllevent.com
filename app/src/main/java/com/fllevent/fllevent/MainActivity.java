@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     ArrayList<String> searchList;
     public static final String EVENT_NAME = "com.fllevent.fllevent.NAME";
     public static final String EXTRA_ID = "com.fllevent.fllevent.ID";
+    boolean searched = false;
     EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,15 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     public void search(View view) {
         Button button = findViewById(R.id.button);
-        //button.setText("Back");
+        if(searched) {
+            button.setText("Search");
+            editText.setText("");
+            searched = false;
+        }
+        else if(!searched) {
+            button.setText("Clear");
+            searched = true;
+        }
         String searchData = editText.getText().toString();
         searchList = new ArrayList<String>();
         for(int i = 0; i < list.size(); i++) {
