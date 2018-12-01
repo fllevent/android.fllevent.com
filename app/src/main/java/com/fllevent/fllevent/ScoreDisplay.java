@@ -48,7 +48,7 @@ public class ScoreDisplay extends AppCompatActivity {
         Network network = new BasicNetwork(new HurlStack());
         mRequestQueue = new RequestQueue(cache, network);
         mRequestQueue.start();
-        String url ="http://fllevent.com:4000/api/team/singleteam/";
+        String url ="http://fllevent.com:4000/api/v1/team/singleteam/";
         url = url.concat(Integer.toString(teamNum));
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {

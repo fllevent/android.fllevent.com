@@ -56,7 +56,7 @@ public class EventDisplay extends AppCompatActivity implements MyRecyclerViewAda
         Network network = new BasicNetwork(new HurlStack());
         mRequestQueue = new RequestQueue(cache, network);
         mRequestQueue.start();
-        String url ="http://fllevent.com:4000/api/event/singleevent/";
+        String url ="http://fllevent.com:4000/api/v1/event/singleevent/";
         url = url.concat(eventName);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
